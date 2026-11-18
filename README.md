@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".claude-plugin/icon.png" alt="mythos-router logo: a route that forks, its lit branch ending in a star" width="160">
+  <img src=".claude-plugin/icon.png" alt="mythos-router logo: an arrow from a session panel to an orange card holding a spark" width="160">
 </p>
 
 # mythos-router
