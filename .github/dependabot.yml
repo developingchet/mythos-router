@@ -15,6 +15,9 @@ updates:
     directory: /.github/ci
     schedule:
       interval: weekly
+  # requirements.txt pins every package by hash, so an update that brings in
+  # a new dependency fails to install until that dependency is added by hand.
+  # python-dateutil 4 adds tzdata, and strictyaml needs only 2.6 or later.
   - package-ecosystem: pip
     directory: /.github/ci
     schedule:
@@ -22,3 +25,6 @@ updates:
     groups:
       skills-ref:
         patterns: ['*']
+    ignore:
+      - dependency-name: python-dateutil
+        update-types: ['version-update:semver-major']
