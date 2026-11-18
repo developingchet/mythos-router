@@ -29,6 +29,10 @@ An independent project, not affiliated with or supported by Anthropic.
 - **Newer releases.** The `model` option names the Mythos model. With `autoUpgrade` on, the plugin checks
   once a day whether a newer Mythos answers and uses it instead.
 
+- **Skill.** `mythos-router:delegating-to-mythos` tells the main agent which type to pick, how to brief it,
+  and what to avoid, such as forks (which never leave the parent's model) or a Mythos agent starting costly
+  Mythos subagents of its own.
+
 The agent types are plain agent files, so they run on Mythos even if the plugin's hooks module does not load.
 Routing, the alias override and the release check come from the hooks module, a
 [mod](https://code.claude.com/docs/en/plugins/mods/create) that hooks the `agent.spawn` event and sets the
@@ -226,6 +230,19 @@ mods API can change between releases.
 - A Mythos agent's own subagents inherit Mythos unless they are given another model.
 - `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` outranks the plugin.
 - The release check finds only IDs that follow the `claude-mythos-<major>-<minor>` pattern.
+
+## Standards
+
+The repository follows two open standards strictly:
+
+- **[AGENTS.md](https://agents.md).** Instructions for coding agents working on the repository are in
+  [AGENTS.md](AGENTS.md), which Claude Code and other agents read as project context.
+- **[Agent Skills](https://agentskills.io/specification).** Every skill under `skills/` conforms to the
+  specification, and CI checks each one with its reference validator, `skills-ref validate`, pinned to a commit
+  of the specification's repository.
+
+The subagent definitions in `agents/` use Claude Code's own
+[subagent format](https://code.claude.com/docs/en/sub-agents), which neither standard covers.
 
 ## Developing
 

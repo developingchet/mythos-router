@@ -42,3 +42,24 @@ jobs:
       - run: claude --version
       - run: claude plugin validate --strict .
       - run: claude plugin test .
+
+  skills:
+    name: skills
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.13'
+      # The Agent Skills reference validator, pinned to a commit of the
+      # specification's repository.
+      - name: Install skills-ref
+        run: pip install --no-cache-dir 'skills-ref @ git+https://github.com/agentskills/agentskills@83021e2be457a9b6679148719c1f6074f0ad975e#subdirectory=skills-ref'
+      - name: Validate every skill
+        run: |
+          for skill in skills/*/; do
+            skills-ref validate "$skill"
+          done

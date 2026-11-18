@@ -20,6 +20,11 @@ opening an issue.
    request which model `/tasks` showed for each. The test kit stands in for the engine and cannot show which
    model a real request reached.
 5. Update `README.md` and `CHANGELOG.md` when behaviour or options change.
+6. Keep [AGENTS.md](AGENTS.md) in the [AGENTS.md](https://agents.md) format and current with the layout and
+   commands, and keep every skill in `skills/` conformant with the
+   [Agent Skills specification](https://agentskills.io/specification). CI runs `skills-ref validate` on each
+   skill; to run it locally, install `skills-ref` from the `skills-ref` folder of
+   [agentskills/agentskills](https://github.com/agentskills/agentskills) at the commit `test.yml` pins.
 
 ## Commit messages
 

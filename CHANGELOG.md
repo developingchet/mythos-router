@@ -8,6 +8,8 @@
 - `/mythos-subagents on|all|off` routes other subagents to Mythos for the session: `on` covers
   general-purpose agents whose caller names no model, `all` every new subagent, teammate and workflow agent.
   Forks and resumed agents keep their model. Only the session's owner can turn routing on.
+- The `mythos-router:delegating-to-mythos` skill, in the Agent Skills format, tells the main agent which type
+  to start, how to brief it, and what keeps work off Mythos or makes it costly.
 - The `routing` option sets the mode each session starts in.
 - The `model` option sets the Mythos model ID and accepts only `claude-mythos-*` IDs.
 - The `autoUpgrade` option, off by default, checks once a day for a newer Mythos release with a request capped
