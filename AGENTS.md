@@ -24,7 +24,10 @@ tsc -p .                          # after the types exist
 ```
 
 CI runs `validate --strict` and `test` on Windows and Ubuntu against the Claude Code release pinned in
-`.github/ci/`, and validates the skill with `skills-ref validate skills/delegating-to-mythos`.
+`.github/ci/`, and validates the skill with the reference validator, `agentskills validate
+skills/delegating-to-mythos` from the `skills-ref` package, installed from the hash-pinned
+`.github/ci/requirements.txt`. Dependabot proposes each new Claude Code release as a pull
+request; every CI dependency stays pinned by version and hash.
 
 ## Code rules the engine enforces
 

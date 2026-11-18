@@ -54,12 +54,14 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.13'
-      # The Agent Skills reference validator, pinned to a commit of the
-      # specification's repository.
+      # The Agent Skills reference validator, the skills-ref package, which
+      # installs the agentskills command. It and its dependencies are pinned
+      # by hash in .github/ci/requirements.txt.
       - name: Install skills-ref
-        run: pip install --no-cache-dir 'skills-ref @ git+https://github.com/agentskills/agentskills@83021e2be457a9b6679148719c1f6074f0ad975e#subdirectory=skills-ref'
+        run: |
+          pip install --no-cache-dir --only-binary :all: --require-hashes -r .github/ci/requirements.txt
       - name: Validate every skill
         run: |
           for skill in skills/*/; do
-            skills-ref validate "$skill"
+            agentskills validate "$skill"
           done
