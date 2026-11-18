@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 - 2026-11-18
+## 0.0.1 - 2026-11-18
 
 - `mythos-router:general`, a general-purpose agent type with the caller's tools, and `mythos-router:analyst`,
   a read-only one (`Read`, `Grep`, `Glob`), both pinned to Claude Mythos. A caller's alias in the Agent tool's

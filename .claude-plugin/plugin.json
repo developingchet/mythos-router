@@ -1,7 +1,7 @@
 {
   "name": "mythos-router",
   "displayName": "Mythos Router",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Lets agents on any model start subagents on Claude Mythos: two Mythos agent types, optional routing of other subagents, and an optional check for newer Mythos releases. Needs an account with Mythos access.",
   "author": {
     "name": "developingchet"
