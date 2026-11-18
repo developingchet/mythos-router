@@ -23,14 +23,14 @@ claude plugin test .              # every *.test.ts
 tsc -p .                          # after the types exist
 ```
 
-CI runs the same on Windows and Ubuntu against the Claude Code release pinned in `.github/ci/`, and validates
-the skill with `skills-ref validate skills/delegating-to-mythos`.
+CI runs `validate --strict` and `test` on Windows and Ubuntu against the Claude Code release pinned in
+`.github/ci/`, and validates the skill with `skills-ref validate skills/delegating-to-mythos`.
 
 ## Code rules the engine enforces
 
-- A function that takes `$` must be declared at the top level of its file (`function name($, …)` or a const
-  bound to one) or imported from another file of the module; an arrow function or a closure inside `register`
-  that takes `$` fails to load.
+- A helper that takes `$`, other than a hook passed to `on(…)` or `.catch(…)`, must be a function declaration
+  at the top level of its file or imported from another file of the module; an arrow-function helper, or one
+  declared inside `register`, fails to load.
 - The atom in `register.ts` names the plugin as `'mythos-router'`; it must match `name` in `plugin.json`.
 - A `$.state` value is never `undefined`; `null` means "not set this session".
 - Gating hooks (`agent.spawn`, `command.run`) carry a `.catch`. `agent.spawn` fails open; the command fails

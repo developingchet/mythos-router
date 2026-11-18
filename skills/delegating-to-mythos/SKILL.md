@@ -30,7 +30,7 @@ it observed from what it inferred.
   Opus does per token, so tell it to pass `model: "haiku"` or `"sonnet"` for wide, cheap searches.
 - `/mythos-subagents on|all` routes other subagents to Mythos, but only the user can turn it on: a call from an
   agent is refused. Suggest the command to the user for a long stretch of Mythos work; do not try to run it.
-- If a toast says a spawn started on another model, or the spawn fails with a model or access error, do not
-  retry. Tell the user: `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` overrides every subagent's model, and Mythos needs
-  an account verified for it.
+- If the user reports a toast saying a spawn started on another model, or the spawn fails with a model or
+  access error, do not retry. Tell the user: `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` overrides every subagent's
+  model, and Mythos needs an account verified for it.
 - `/mythos-subagents status` shows the model and routing mode; while a subagent runs, `/tasks` shows its model.
