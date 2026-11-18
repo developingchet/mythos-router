@@ -7,11 +7,18 @@ updates:
     groups:
       actions:
         patterns: ['*']
-  # Claude Code in .github/ci stays at the release the plugin is checked
-  # against, so only security updates touch it.
+  # The Claude Code release CI checks against. The hooks API can change
+  # between releases, so each new release arrives as a pull request whose
+  # checks show whether the plugin still works with it; merging it moves the
+  # pin.
   - package-ecosystem: npm
     directory: /.github/ci
     schedule:
       interval: weekly
-    ignore:
-      - dependency-name: '@anthropic-ai/claude-code*'
+  - package-ecosystem: pip
+    directory: /.github/ci
+    schedule:
+      interval: weekly
+    groups:
+      skills-ref:
+        patterns: ['*']

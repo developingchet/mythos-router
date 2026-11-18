@@ -23,8 +23,8 @@ opening an issue.
 6. Keep [AGENTS.md](AGENTS.md) in the [AGENTS.md](https://agents.md) format and current with the layout and
    commands, and keep every skill in `skills/` conformant with the
    [Agent Skills specification](https://agentskills.io/specification). CI runs `skills-ref validate` on each
-   skill; to run it locally, install `skills-ref` from the `skills-ref` folder of
-   [agentskills/agentskills](https://github.com/agentskills/agentskills) at the commit `test.yml` pins.
+   skill; to run it locally, install the same pinned packages with
+   `pip install --require-hashes -r .github/ci/requirements.txt`.
 
 ## Commit messages
 
@@ -34,16 +34,10 @@ squash-merged, so the pull request title becomes the commit subject on `main`.
 
 ## Compatibility
 
-CI runs against the Claude Code release pinned in `.github/ci/package.json`. The Compatibility workflow runs
-the same checks each week against the newest releases on npm's `latest` and `next` tags. To move the pinned
-release forward once a newer one passes:
+CI runs against the Claude Code release pinned in `.github/ci/package.json` and its lockfile. Dependabot
+opens a pull request each week when a newer release is on npm; its checks show whether the plugin still works
+with that release, and merging it moves the pin. A failing pull request means the hooks API changed: fix the
+plugin on that branch, or close the pull request and stay on the pinned release.
 
-```sh
-npm install --prefix .github/ci --package-lock-only @anthropic-ai/claude-code@<version>
-```
-
-Then raise `engines["claude-code"]` in `.claude-plugin/plugin.json` only if the plugin starts to depend on
-something that release added, and update the release named under Compatibility in the README.
-
-GitHub turns off scheduled workflows in a public repository after 60 days without activity and emails the
-owner before it does; re-enable Compatibility from the Actions tab if that happens.
+Raise `engines["claude-code"]` in `.claude-plugin/plugin.json` only when the plugin starts to depend on
+something a newer release added.
