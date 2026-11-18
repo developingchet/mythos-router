@@ -25,7 +25,9 @@ opening an issue.
    [Agent Skills specification](https://agentskills.io/specification). CI runs the reference validator on each
    skill; to run it locally, install the same pinned packages with
    `pip install --require-hashes -r .github/ci/requirements.txt`, then run
-   `agentskills validate skills/<name>`.
+   `agentskills validate skills/<name>`. To change the validator's version, edit
+   `.github/ci/requirements.in` and regenerate `requirements.txt` from that folder with
+   `pip-compile --generate-hashes --output-file=requirements.txt requirements.in`.
 
 ## Commit messages
 
