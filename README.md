@@ -238,7 +238,7 @@ The repository follows two open standards strictly:
 - **[AGENTS.md](https://agents.md).** Instructions for coding agents working on the repository are in
   [AGENTS.md](AGENTS.md), which Claude Code and other agents read as project context.
 - **[Agent Skills](https://agentskills.io/specification).** Every skill under `skills/` conforms to the
-  specification, and CI checks each one with its reference validator, `skills-ref validate`, installed from
+  specification, and CI checks each one with its reference validator, `skills-ref`, installed from
   PyPI with every package pinned by hash.
 
 The subagent definitions in `agents/` use Claude Code's own

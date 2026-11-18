@@ -22,9 +22,10 @@ opening an issue.
 5. Update `README.md` and `CHANGELOG.md` when behaviour or options change.
 6. Keep [AGENTS.md](AGENTS.md) in the [AGENTS.md](https://agents.md) format and current with the layout and
    commands, and keep every skill in `skills/` conformant with the
-   [Agent Skills specification](https://agentskills.io/specification). CI runs `skills-ref validate` on each
+   [Agent Skills specification](https://agentskills.io/specification). CI runs the reference validator on each
    skill; to run it locally, install the same pinned packages with
-   `pip install --require-hashes -r .github/ci/requirements.txt`.
+   `pip install --require-hashes -r .github/ci/requirements.txt`, then run
+   `agentskills validate skills/<name>`.
 
 ## Commit messages
 
