@@ -21,8 +21,8 @@ An independent project, not affiliated with or supported by Anthropic.
 
 - **Agent types.** `mythos-router:general` has the caller's tools; `mythos-router:analyst` can only read and
   search files. Both appear in every agent's list of subagent types, so the model picks them when a task
-  calls for Mythos, or when you ask for it. Both always run on Mythos, even when the caller passes an alias
-  in `model`.
+  calls for Mythos, or when you ask for it. Both run on Mythos even when the caller passes an alias in
+  `model` (see [Known limits](#known-limits) for the exceptions).
 - **Routing.** With routing `on`, general-purpose agents that the caller started without a model run on Mythos
   too; with `all`, every new subagent, teammate and workflow agent does. The `routing` option sets the mode each
   session starts in, and `/mythos-subagents` changes it for one session.
@@ -51,16 +51,16 @@ spawn's `model`.
 
 ## Install
 
-1. Install from a shell, choosing the routing mode at the same time:
+1. Install from a shell:
 
    ```sh
-   claude plugin install mythos-router --marketplace developingchet/mythos-router --config routing=on
+   claude plugin install mythos-router --marketplace developingchet/mythos-router
    ```
 
    This adds the marketplace and installs the plugin under the user scope, so it loads in every session and
-   project. Leave out `--config` to keep the default, `off`; add `--config autoUpgrade=true` to turn on the
-   release check. A shell install does not prompt for options, and its closing line lists those left unset;
-   they keep their defaults.
+   project. Routing starts `off` and the release check stays off. To choose otherwise at install time, add
+   `--config` once per option, such as `--config routing=on` or `--config autoUpgrade=true`. A shell install
+   does not prompt for options, and its closing line lists those left unset; they keep their defaults.
 
    Or at the prompt of a Claude Code terminal session, where an options screen asks for each value and the user
    scope is first in the list:

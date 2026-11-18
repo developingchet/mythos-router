@@ -37,7 +37,7 @@
     "model": {
       "type": "string",
       "title": "Mythos model",
-      "description": "The lowest Mythos model ID Mythos subagents run on. Only claude-mythos-* IDs are accepted.",
+      "description": "The Mythos model ID subagents run on; autoUpgrade may use a newer one. Only claude-mythos-* IDs are accepted.",
       "default": "claude-mythos-5-2"
     },
     "autoUpgrade": {

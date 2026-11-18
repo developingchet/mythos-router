@@ -60,6 +60,30 @@ describe('check for a newer Mythos', () => {
     expect(seen).toEqual(['claude-mythos-5-2'])
   })
 
+  test('a second check with autoUpgrade off still reports the earlier find', { options: quiet }, async ($, on) => {
+    mock.store(on)
+    mock.clock(on, { now: DAY_MS * 10 })
+    const asked: string[] = []
+    on('model.complete', fakeModels({ 'claude-mythos-5-3': 'answer' }, asked))
+
+    await $.command.run(commandInput('check'))
+    const second = await $.command.run(commandInput('check'))
+
+    expect(JSON.stringify(second)).toContain('claude-mythos-5-3 answers')
+  })
+
+  test('a second check with autoUpgrade on says nothing newer than the model in use', { options: upgrading }, async ($, on) => {
+    mock.store(on, { newestCheckedAt: DAY_MS * 10 })
+    mock.clock(on, { now: DAY_MS * 10 })
+    const asked: string[] = []
+    on('model.complete', fakeModels({ 'claude-mythos-5-3': 'answer' }, asked))
+
+    await $.command.run(commandInput('check'))
+    const second = await $.command.run(commandInput('check'))
+
+    expect(JSON.stringify(second)).toContain('No Mythos release newer than claude-mythos-5-3')
+  })
+
   test('a stored find applies only while autoUpgrade is on', { options: quiet }, async ($, on) => {
     mock.store(on, { newestModel: 'claude-mythos-5-3' })
     const seen: (string | undefined)[] = []

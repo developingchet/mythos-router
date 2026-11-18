@@ -1,7 +1,7 @@
 /**
  * `off`: only the Mythos agent types run on Mythos. `on`: also
- * general-purpose and workflow agents whose caller named no model. `all`:
- * every new subagent.
+ * general-purpose agents whose caller named no model. `all`: every new
+ * subagent, teammate and workflow agent.
  */
 export type RoutingMode = 'off' | 'on' | 'all'
 

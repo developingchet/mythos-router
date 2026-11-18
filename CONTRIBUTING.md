@@ -15,7 +15,8 @@ opening an issue.
    ```
 
 4. A change to how spawns are routed also needs a check in a live session with Mythos access: start a
-   `mythos-router:general` subagent, and an `Explore` subagent with routing `on` and `all`, and say in the pull
+   `mythos-router:general` subagent; a general-purpose subagent with routing `on`; and an `Explore` subagent
+   with routing `on`, where it keeps its own model, and with `all`, where it moves to Mythos. Say in the pull
    request which model `/tasks` showed for each. The test kit stands in for the engine and cannot show which
    model a real request reached.
 5. Update `README.md` and `CHANGELOG.md` when behaviour or options change.

@@ -2,8 +2,8 @@ import { atom, read, update } from 'claude-code'
 import type { AgentSpawnInput, EngineInterface, Register } from 'claude-code'
 
 import type { RoutingMode } from '../types'
-import { configuredModel } from './model-id'
-import { checkForNewer, effectiveModel } from './upgrade'
+import { configuredModel, newerOf } from './model-id'
+import { checkForNewer, effectiveModel, storedNewest } from './upgrade'
 
 const COMMAND = 'mythos-subagents'
 const AGENT_TYPES = ['general', 'analyst'] as const
@@ -44,11 +44,13 @@ const inheritsModel = (e: AgentSpawnInput): boolean =>
 const wantsRoute = (e: AgentSpawnInput, mode: RoutingMode): boolean =>
   mode === 'all' || (mode === 'on' && inheritsModel(e))
 
-const checkReply = (found: string | undefined, model: string, autoUpgrade: boolean): string => {
-  if (found === undefined) return `No Mythos release newer than ${model} answered.`
-  if (autoUpgrade) return `Mythos subagents now run on ${found}.`
+// `newest` is the newest model known to answer, from this check or an earlier
+// one; `model` is the one subagents run on now.
+const checkReply = (newest: string, configured: string, model: string, autoUpgrade: boolean): string => {
+  if (newest === model) return `No Mythos release newer than ${model} answered.`
+  if (autoUpgrade) return `Mythos subagents now run on ${newest}.`
 
-  return `${found} answers. Set the model option to it, or turn on autoUpgrade, to use it.`
+  return `${newest} answers. Set the model option to it, or turn on autoUpgrade, to use it.`
 }
 
 const statusText = (mode: RoutingMode): string | undefined =>
@@ -117,8 +119,9 @@ export const register: Register = (on, options) => {
     if (arg === 'check') {
       if (!isOwner) return { text: `/${COMMAND} check can only be run by the session's owner.` }
       const found = await checkForNewer($, configured, true)
+      const newest = found ?? newerOf(configured, await storedNewest($))
 
-      return { text: checkReply(found, model, autoUpgrade) }
+      return { text: checkReply(newest, configured, model, autoUpgrade) }
     }
 
     if (arg !== '' && arg !== 'status') return { text: `Usage: /${COMMAND} on|all|off|status|check` }
@@ -127,5 +130,5 @@ export const register: Register = (on, options) => {
     const types = AGENT_TYPES.map(name => `${$.plugin.name}:${name}`).join(', ')
 
     return { text: `${types} run on ${model}. Routing ${mode}: ${describeMode(mode, model)}.` }
-  }).catch(() => ({ text: `/${COMMAND} failed; check /${COMMAND} status.` }))
+  }).catch(() => ({ text: `/${COMMAND} failed; the debug log (claude --debug) has the error.` }))
 }
