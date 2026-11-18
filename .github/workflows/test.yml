@@ -57,7 +57,8 @@ jobs:
       # The Agent Skills reference validator, pinned by hash with its
       # dependencies in .github/ci/requirements.txt.
       - name: Install skills-ref
-        run: pip install --no-cache-dir --only-binary :all: --require-hashes -r .github/ci/requirements.txt
+        run: |
+          pip install --no-cache-dir --only-binary :all: --require-hashes -r .github/ci/requirements.txt
       - name: Validate every skill
         run: |
           for skill in skills/*/; do
