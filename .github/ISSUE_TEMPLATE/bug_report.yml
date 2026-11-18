@@ -1,0 +1,64 @@
+name: Bug report
+description: Something does not work as documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. For security problems, use the Security tab instead (see SECURITY.md).
+        Transcripts and logs can quote your code and conversation: remove anything private before pasting.
+  - type: input
+    id: version
+    attributes:
+      label: mythos-router version
+      description: The version `claude plugin list` shows, or the commit.
+    validations:
+      required: true
+  - type: input
+    id: claude-code
+    attributes:
+      label: Claude Code version and OS
+      description: Output of `claude --version`, and your operating system.
+      placeholder: 2.1.327, Windows 11
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How is it loaded?
+      options: [Installed from the marketplace, Installed from a clone, --plugin-dir, Other]
+    validations:
+      required: true
+  - type: input
+    id: options
+    attributes:
+      label: Options
+      description: Output of `/mythos-subagents status`, and the `routing`, `model` and `autoUpgrade` values.
+    validations:
+      required: true
+  - type: dropdown
+    id: access
+    attributes:
+      label: Does /model claude-mythos-5-2 work in a session on this account?
+      options: ['Yes', 'No', 'Not sure']
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behaviour
+      description: Include the model `/tasks` showed for the subagent, if one started.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Transcript lines and debug log
+      description: Any `mythos-router` toasts or transcript lines, and its lines from a `--debug` session's log.
+      render: text

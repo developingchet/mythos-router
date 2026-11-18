@@ -1,0 +1,107 @@
+name: Release
+
+# Publishes a GitHub release for a tag made by `claude plugin tag`
+# (mythos-router--v<version>): the plugin as a zip and a checksum file, both
+# signed with cosign, and the version's CHANGELOG entry as the notes. The
+# tagged commit runs the full test workflow first.
+
+on:
+  push:
+    tags: ['mythos-router--v*']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+    permissions:
+      contents: read
+
+  github-release:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # create the release
+      id-token: write # cosign keyless signing of the release files
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check the tag against the manifest
+        id: version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="${TAG#mythos-router--v}"
+          manifest=$(node -p "require('./.claude-plugin/plugin.json').version")
+          if [ "$version" != "$manifest" ]; then
+            echo "::error::tag $TAG does not match version $manifest in plugin.json"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Package and checksum
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        # The zip holds the plugin and its documents only. The paths are left
+        # out here rather than with export-ignore, which would also hide them
+        # from GitHub's source archives and the tools that read those.
+        run: |
+          git archive --format=zip -o "mythos-router-$VERSION.zip" HEAD -- . \
+            ':(exclude).github' ':(exclude)tests' \
+            ':(exclude)tsconfig.json' ':(exclude).gitattributes' ':(exclude).gitignore'
+          sha256sum "mythos-router-$VERSION.zip" > checksums.txt
+          cat checksums.txt
+      - uses: sigstore/cosign-installer@756fe2d284c7292c4e9b62c8a28f1e5629c59532 # v4.1.3
+      - name: Sign the release files
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          for file in checksums.txt "mythos-router-$VERSION.zip"; do
+            cosign sign-blob --yes --bundle "$file.sigstore.json" "$file"
+          done
+      - name: Release notes
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          awk -v heading="## $VERSION " 'index($0, heading) == 1 { found = 1; next } found && /^## / { exit } found' CHANGELOG.md > changes.md
+          if [ ! -s changes.md ]; then
+            echo "::error::CHANGELOG.md has no entry for $VERSION"
+            exit 1
+          fi
+          {
+            cat changes.md
+            echo
+            echo '## Install'
+            echo
+            echo '```text'
+            echo '/plugin marketplace add developingchet/mythos-router'
+            echo '/plugin install mythos-router@mythos-router'
+            echo '```'
+            echo
+            echo 'An install that follows the default branch receives this release with `claude plugin update mythos-router@mythos-router`. To install exactly this release instead, add the marketplace as `developingchet/mythos-router#'"$TAG"'`, after `/plugin marketplace remove mythos-router` if it is already added (removing it also deletes saved options such as `routing`); see [Install a release](https://github.com/developingchet/mythos-router#install-a-release).'
+            echo
+            echo 'It needs Claude Code 2.1.327 or later and an account with access to Claude Mythos; see [Before you install](https://github.com/developingchet/mythos-router#before-you-install).'
+            echo
+            echo '## Verify the release files'
+            echo
+            echo '`checksums.txt` and the zip are signed with cosign (`*.sigstore.json`):'
+            echo
+            echo '```bash'
+            echo 'cosign verify-blob checksums.txt --bundle checksums.txt.sigstore.json \'
+            echo "  --certificate-identity 'https://github.com/developingchet/mythos-router/.github/workflows/release.yml@refs/tags/$TAG' \\"
+            echo '  --certificate-oidc-issuer https://token.actions.githubusercontent.com'
+            echo 'sha256sum -c checksums.txt'
+            echo '```'
+          } > notes.md
+          cat notes.md
+      - uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
+        with:
+          name: mythos-router ${{ steps.version.outputs.version }}
+          body_path: notes.md
+          files: |
+            mythos-router-*.zip
+            checksums.txt
+            *.sigstore.json

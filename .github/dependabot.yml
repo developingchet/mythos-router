@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+  # Claude Code in .github/ci stays at the release the plugin is checked
+  # against, so only security updates touch it.
+  - package-ecosystem: npm
+    directory: /.github/ci
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: '@anthropic-ai/claude-code*'

@@ -1,0 +1,8 @@
+{
+  "name": "mythos-router-ci",
+  "private": true,
+  "description": "The Claude Code release CI tests the plugin against, pinned by the lockfile beside it.",
+  "dependencies": {
+    "@anthropic-ai/claude-code": "2.1.327"
+  }
+}

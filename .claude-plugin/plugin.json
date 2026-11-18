@@ -1,0 +1,50 @@
+{
+  "name": "mythos-router",
+  "displayName": "Mythos Router",
+  "version": "0.1.0",
+  "description": "Lets agents on any model start subagents on Claude Mythos: two Mythos agent types, optional routing of other subagents, and an optional check for newer Mythos releases. Needs an account with Mythos access.",
+  "author": {
+    "name": "developingchet"
+  },
+  "homepage": "https://github.com/developingchet/mythos-router",
+  "repository": "https://github.com/developingchet/mythos-router",
+  "license": "MIT",
+  "keywords": [
+    "mythos",
+    "subagents",
+    "model-routing",
+    "security-research"
+  ],
+  "icon": "./.claude-plugin/icon.png",
+  "types": "./types/index.d.ts",
+  "engines": {
+    "claude-code": ">=2.1.327"
+  },
+  "documentationUrl": "https://github.com/developingchet/mythos-router#readme",
+  "supportUrl": "https://github.com/developingchet/mythos-router/issues",
+  "userConfig": {
+    "routing": {
+      "type": "string",
+      "title": "Routing at session start",
+      "description": "off: only the mythos-router agent types run on Mythos. on: general-purpose agents also do, when the caller names no model. all: every new subagent does. /mythos-subagents changes it for one session.",
+      "default": "off",
+      "options": [
+        "off",
+        "on",
+        "all"
+      ]
+    },
+    "model": {
+      "type": "string",
+      "title": "Mythos model",
+      "description": "The lowest Mythos model ID Mythos subagents run on. Only claude-mythos-* IDs are accepted.",
+      "default": "claude-mythos-5-2"
+    },
+    "autoUpgrade": {
+      "type": "boolean",
+      "title": "Check for newer Mythos releases",
+      "description": "Once a day at session start, send a short request to the next Mythos model IDs and use the newest that answers instead of the model option.",
+      "default": false
+    }
+  }
+}
