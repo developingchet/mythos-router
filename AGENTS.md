@@ -5,13 +5,14 @@ subagents on Claude Mythos. README.md describes it for users; this file is for w
 
 ## Layout
 
-- `.claude-plugin/plugin.json`: manifest, `userConfig` options (`routing`, `model`, `autoUpgrade`) and the
+- `.claude-plugin/plugin.json`: manifest, `userConfig` options (`routing`, `model`, `effort`, `autoUpgrade`) and the
   `engines` floor. `.claude-plugin/marketplace.json` lists the plugin with `"source": "./"`.
 - `agents/general.md`, `agents/analyst.md`: Claude Code subagent definitions pinned to Mythos. They must work
   without the hooks module, so each keeps `model:` set to the default model ID.
 - `skills/delegating-to-mythos/`: a skill in the Agent Skills format.
 - `hooks/`: the hooks module (a Claude Code mod). `register.ts` hooks `session.start`, `agent.spawn` and
-  `command.run`; `model-id.ts` parses and compares Mythos IDs; `upgrade.ts` holds the release check.
+  `command.run`; `model-id.ts` parses and compares Mythos IDs; `upgrade.ts` holds the release check;
+  `agent-effort.ts` registers the agent types again from their files with the `effort` option.
 - `types/index.d.ts`: the `$.state` contract. `tests/`: `claude plugin test` suites and fixtures.
 
 ## Commands
@@ -41,6 +42,10 @@ hash.
 - Gating hooks (`agent.spawn`, `command.run`) carry a `.catch`. `agent.spawn` fails open; the command fails
   with a message.
 - Forks and resumed spawns take no model rewrite; leave them to `next(e)`.
+- `agent.spawn` cannot set effort, and `${user_config.*}` is not substituted in agent frontmatter, so the
+  `effort` option reaches the agent types only through `$.agent.register`. `agent-effort.ts` reads
+  `agents/*.md` back, so their frontmatter keeps one-line `name`, `description`, `model` and `tools` fields; a
+  file with any other field is left unregistered, with a toast, rather than registered without it.
 
 ## Behaviour that must not change without a decision
 

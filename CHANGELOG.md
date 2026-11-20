@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- The `effort` option sets the effort level of `mythos-router:general` and `mythos-router:analyst`: `auto`, the
+  default, keeps the model's own, or `low`, `medium`, `high`, `xhigh` or `max`. The interactive install asks
+  for it with the other options. The session's effort does not reach a subagent on another model, so until now
+  the agent types always ran at Mythos's default. `/mythos-subagents status` shows the level.
+
 ## 0.0.1 - 2026-11-18
 
 - `mythos-router:general`, a general-purpose agent type with the caller's tools, and `mythos-router:analyst`,

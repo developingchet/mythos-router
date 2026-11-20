@@ -1,7 +1,8 @@
 import { atom, read, update } from 'claude-code'
 import type { AgentSpawnInput, EngineInterface, Register } from 'claude-code'
 
-import type { RoutingMode } from '../types'
+import type { EffortLevel, RoutingMode } from '../types'
+import { configuredEffort, registerWithEffort } from './agent-effort'
 import { configuredModel, newerOf } from './model-id'
 import { checkForNewer, effectiveModel, storedNewest } from './upgrade'
 
@@ -56,6 +57,18 @@ const checkReply = (newest: string, configured: string, model: string, autoUpgra
 const statusText = (mode: RoutingMode): string | undefined =>
   mode === 'off' ? undefined : `subagents: Mythos (${mode})`
 
+const effortText = (effort: EffortLevel | undefined): string =>
+  effort === undefined ? "the model's default effort" : `${effort} effort`
+
+// The session's effort does not reach a subagent on another model, and an
+// agent.spawn hook cannot set one, so the configured level goes on the agent
+// types themselves: each is registered again from its file with `effort`.
+async function applyEffort($: EngineInterface, effort: EffortLevel): Promise<void> {
+  const applied = await Promise.all(AGENT_TYPES.map(name => registerWithEffort($, name, effort)))
+  const kept = AGENT_TYPES.filter((_, i) => !applied[i]).map(name => `${$.plugin.name}:${name}`)
+  if (kept.length > 0) $.ui.toast(`${$.plugin.name}: ${kept.join(', ')} run at the model's default effort, not ${effort}`)
+}
+
 async function currentMode($: EngineInterface, startMode: RoutingMode): Promise<RoutingMode> {
   return (await read($, sessionRouting)) ?? startMode
 }
@@ -64,6 +77,7 @@ export const register: Register = (on, options) => {
   const { model: configured, isValid } = configuredModel(options.model)
   const startMode = MODES[typeof options.routing === 'string' ? options.routing : 'off'] ?? 'off'
   const autoUpgrade = options.autoUpgrade === true
+  const effort = configuredEffort(options.effort)
 
   on('session.start', async ($, e, next) => {
     await $.command.register({
@@ -73,6 +87,7 @@ export const register: Register = (on, options) => {
     })
     if (!isValid) $.ui.toast(`${$.plugin.name}: the model setting is not a claude-mythos-* ID; using ${configured}`)
     $.ui.status(statusText(await currentMode($, startMode)))
+    if (effort !== undefined) await applyEffort($, effort)
 
     if (autoUpgrade) {
       void checkForNewer($, configured, false)
@@ -129,6 +144,6 @@ export const register: Register = (on, options) => {
     const mode = await currentMode($, startMode)
     const types = AGENT_TYPES.map(name => `${$.plugin.name}:${name}`).join(', ')
 
-    return { text: `${types} run on ${model}. Routing ${mode}: ${describeMode(mode, model)}.` }
+    return { text: `${types} run on ${model} at ${effortText(effort)}. Routing ${mode}: ${describeMode(mode, model)}.` }
   }).catch(() => ({ text: `/${COMMAND} failed; the debug log (claude --debug) has the error.` }))
 }

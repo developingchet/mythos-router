@@ -1,4 +1,12 @@
-import type { AgentSpawnInput, CommandRunInput, ModelCompleteInput, ModelCompleteResult, PromptOrigin } from 'claude-code'
+import type {
+  AgentSpawnInput,
+  CommandRunInput,
+  ModelCompleteInput,
+  ModelCompleteResult,
+  On,
+  PromptOrigin,
+  SessionStartInput,
+} from 'claude-code'
 
 type SpawnArgs = {
   subagentType: string
@@ -31,6 +39,35 @@ export const commandInput = (args: string, kind: PromptOrigin['kind'] = 'compose
     origin: { kind },
     presentation: { isFullscreen: false, columns: 80 },
   }) as CommandRunInput
+
+/** A `-p` run's start, which draws nowhere. */
+export const sessionInput = (): SessionStartInput => ({ cwd: '.', surface: null, isInteractive: false })
+
+/** Answers what the plugin's `session.start` hook calls beneath it, and the start itself. */
+export const answerSessionStart = (on: On): void => {
+  on('session.start', (_$: unknown, e: SessionStartInput) => ({ cwd: e.cwd }))
+  on('command.register', (_$: unknown, e: { name: string }) => ({ value: { command: e.name } }))
+  on('ui.status', () => ({ value: undefined }))
+}
+
+// Shaped as agents/*.md are: one-line frontmatter, then the system prompt.
+const AGENT_FILES: Readonly<Record<string, string>> = {
+  general: '---\nname: general\ndescription: Runs on Mythos.\nmodel: claude-mythos-5-2\n---\n\nYou are an agent.\n',
+  analyst:
+    '---\nname: analyst\ndescription: Reads on Mythos.\nmodel: claude-mythos-5-2\ntools: Read, Grep, Glob\n---\n\nYou are a reader.\n',
+}
+
+const AGENT_FILE = /[\\/]agents[\\/]([a-z-]+)\.md$/
+
+/** Answers `$.fs.read` of the plugin's agent files; any other path is not found. */
+export const answerAgentFiles = (on: On): void => {
+  on('fs.read', (_$: unknown, e: { path: string }) => {
+    const text = AGENT_FILES[AGENT_FILE.exec(e.path)?.[1] ?? '']
+    if (text === undefined) throw new Error(`ENOENT: ${e.path}`)
+
+    return { value: text }
+  })
+}
 
 /** Records the model each spawn reaches the engine with, and starts it on that model. */
 export const recordSpawns = (seen: (string | undefined)[]) => (_$: unknown, e: AgentSpawnInput) => {
