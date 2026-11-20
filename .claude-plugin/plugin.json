@@ -1,8 +1,8 @@
 {
   "name": "mythos-router",
   "displayName": "Mythos Router",
-  "version": "0.0.1",
-  "description": "Lets agents on any model start subagents on Claude Mythos: two Mythos agent types, optional routing of other subagents, and an optional check for newer Mythos releases. Needs an account with Mythos access.",
+  "version": "0.0.2",
+  "description": "Lets agents on any model start subagents on Claude Mythos: two Mythos agent types with a configurable effort level, optional routing of other subagents, and an optional check for newer Mythos releases. Needs an account with Mythos access.",
   "author": {
     "name": "developingchet"
   },
@@ -39,6 +39,20 @@
       "title": "Mythos model",
       "description": "The Mythos model ID subagents run on; autoUpgrade may use a newer one. Only claude-mythos-* IDs are accepted.",
       "default": "claude-mythos-5-2"
+    },
+    "effort": {
+      "type": "string",
+      "title": "Mythos agent effort",
+      "description": "The effort level of the mythos-router agent types. auto: the model's default. Higher levels use more tokens. An effort the caller gives one Agent call still takes precedence.",
+      "default": "auto",
+      "options": [
+        "auto",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
     },
     "autoUpgrade": {
       "type": "boolean",

@@ -26,6 +26,9 @@ An independent project, not affiliated with or supported by Anthropic.
 - **Routing.** With routing `on`, general-purpose agents that the caller started without a model run on Mythos
   too; with `all`, every new subagent, teammate and workflow agent does. The `routing` option sets the mode each
   session starts in, and `/mythos-subagents` changes it for one session.
+- **Effort.** The `effort` option sets how hard the two agent types think, from `low` to `max`; `auto` keeps
+  the model's default. Claude Code's own effort setting does not reach a subagent on another model, so without
+  it a Mythos agent runs at Mythos's default whatever the session's level.
 - **Newer releases.** The `model` option names the Mythos model. With `autoUpgrade` on, the plugin checks
   once a day whether a newer Mythos answers and uses it instead.
 
@@ -34,9 +37,10 @@ An independent project, not affiliated with or supported by Anthropic.
   Mythos subagents of its own.
 
 The agent types are plain agent files, so they run on Mythos even if the plugin's hooks module does not load.
-Routing, the alias override and the release check come from the hooks module, a
+Routing, the alias override, the effort level and the release check come from the hooks module, a
 [mod](https://code.claude.com/docs/en/plugins/mods/create) that hooks the `agent.spawn` event and sets the
-spawn's `model`.
+spawn's `model`. An `agent.spawn` hook cannot set effort, so for a level other than `auto` the module registers
+both agent types again at session start from their files, with `effort` added.
 
 ## Before you install
 
@@ -62,9 +66,10 @@ spawn's `model`.
    ```
 
    This adds the marketplace and installs the plugin under the user scope, so it loads in every session and
-   project. Routing starts `off` and the release check stays off. To choose otherwise at install time, add
-   `--config` once per option, such as `--config routing=on` or `--config autoUpgrade=true`. A shell install
-   does not prompt for options, and its closing line lists those left unset; they keep their defaults.
+   project. Routing starts `off`, the agent types run at the model's default effort and the release check
+   stays off. To choose otherwise at install time, add `--config` once per option, such as
+   `--config routing=on`, `--config effort=high` or `--config autoUpgrade=true`. A shell install does not
+   prompt for options, and its closing line lists those left unset; they keep their defaults.
 
    Or at the prompt of a Claude Code terminal session, where an options screen asks for each value and the user
    scope is first in the list:
@@ -174,7 +179,7 @@ searches to a smaller one.
 
 | Argument | Effect |
 | --- | --- |
-| `status` (or nothing) | Shows the agent types, the model and the routing mode |
+| `status` (or nothing) | Shows the agent types, the model, the effort level and the routing mode |
 | `on` | For this session, general-purpose agents run on Mythos when the caller names no model |
 | `all` | For this session, every new subagent, teammate and workflow agent runs on Mythos |
 | `off` | For this session, only the agent types run on Mythos |
@@ -190,7 +195,21 @@ agents, channels, schedules and plugins can only turn it off.
 | --- | --- | --- |
 | `routing` | `off` | The routing mode each session starts in: `off`, `on` or `all` |
 | `model` | `claude-mythos-5-2` | The Mythos model ID. Anything that is not a `claude-mythos-*` ID falls back to the default, with a toast |
+| `effort` | `auto` | The effort level of the agent types: `auto` (the model's default), `low`, `medium`, `high`, `xhigh` or `max` |
 | `autoUpgrade` | `false` | Check once a day for a newer Mythos release, and use the newest that answers instead of `model` |
+
+### Effort
+
+The options screen of an interactive install asks for `effort` with the other options. An install that kept
+the default, a shell install or an update can set it later with `/plugin configure mythos-router@mythos-router`
+or the option's row in `/config`. Higher levels use more output tokens, at Mythos prices.
+
+The level applies to `mythos-router:general` and `mythos-router:analyst`. An agent that routing moves to Mythos
+keeps the effort its own definition or the caller gives it. An effort the caller passes to one Agent call, and
+`CLAUDE_CODE_EFFORT_LEVEL`, take precedence over the option
+([Choose an effort level](https://code.claude.com/docs/en/sub-agents#choose-an-effort-level)), and Mythos may not
+offer every level. If an agent type cannot be registered again with the level, a toast names it and it runs at
+the model's default. `/mythos-subagents status` shows the level in use.
 
 ### Staying on the newest Mythos
 
@@ -228,6 +247,8 @@ Dependabot opens a pull request for each new Claude Code release, and the pin mo
 - `on` cannot see which model an agent type defines, so it routes only general-purpose agents. Use `all` to move
   other types such as Explore, and workflow agents.
 - A Mythos agent's own subagents inherit Mythos unless they are given another model.
+- The `effort` option needs the hooks module. Without it the agent files apply, which set no effort, because a
+  plugin option cannot be substituted into an agent file's frontmatter.
 - `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` outranks the plugin.
 - The release check finds only IDs that follow the `claude-mythos-<major>-<minor>` pattern.
 

@@ -5,6 +5,9 @@
  */
 export type RoutingMode = 'off' | 'on' | 'all'
 
+/** A level the `effort` option sets on the Mythos agent types. */
+export type EffortLevel = 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+
 declare module 'claude-code' {
   interface PluginState {
     'mythos-router': {
