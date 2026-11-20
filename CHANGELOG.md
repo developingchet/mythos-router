@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.0.2 - 2026-11-20
 
 - The `effort` option sets the effort level of `mythos-router:general` and `mythos-router:analyst`: `auto`, the
   default, keeps the model's own, or `low`, `medium`, `high`, `xhigh` or `max`. The interactive install asks
