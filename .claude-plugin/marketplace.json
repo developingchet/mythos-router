@@ -10,7 +10,7 @@
     {
       "name": "mythos-router",
       "source": "./",
-      "description": "Lets agents on any model start subagents on Claude Mythos: two Mythos agent types, optional routing of other subagents, and an optional check for newer Mythos releases. Needs an account with Mythos access.",
+      "description": "Lets agents on any model start subagents on Claude Mythos: two Mythos agent types with a configurable effort level, optional routing of other subagents, and an optional check for newer Mythos releases. Needs an account with Mythos access.",
       "category": "development",
       "tags": [
         "mythos",

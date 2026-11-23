@@ -2,4 +2,8 @@ node_modules/
 .claude-plugin/types/
 .DS_Store
 *.log
+
+# Local agent instruction files (never committed)
+CLAUDE.md
+CLAUDE.local.md
 .claude/

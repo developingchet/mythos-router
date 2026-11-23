@@ -287,10 +287,16 @@ run `claude plugin tag . --push`, which names the tag `mythos-router--v<version>
 the [Test](.github/workflows/test.yml) workflow, then publishes a GitHub release with the plugin as a zip and a
 checksum file, both signed with cosign.
 
+## Support
+
+For usage questions and setup help, see [SUPPORT.md](SUPPORT.md) or open a Question / Support issue. Report
+bugs through the issue forms, security problems privately as [SECURITY.md](SECURITY.md) describes, and
+problems in Claude Code or Claude Mythos access upstream.
+
 ## Contributing and security
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Report security problems privately, as [SECURITY.md](SECURITY.md)
-describes.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) for the guide for coding agents. Report
+security problems privately, as [SECURITY.md](SECURITY.md) describes.
 
 ## License
 

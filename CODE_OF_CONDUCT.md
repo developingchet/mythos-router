@@ -13,11 +13,11 @@ Unacceptable behavior includes harassment, personal attacks, trolling, and any c
 
 ## Scope
 
-This Code of Conduct applies to all project spaces: GitHub issues, pull requests, discussions, and any other venue where project participants interact.
+This Code of Conduct applies to all project spaces: GitHub issues, pull requests and any other venue where project participants interact.
 
 ## Enforcement
 
-Instances of unacceptable behavior may be reported by opening a [private security advisory](https://github.com/developingchet/mythos-router/security/advisories/new) or contacting the maintainer directly via GitHub ([@developingchet](https://github.com/developingchet)). All reports will be reviewed and investigated promptly.
+Report unacceptable behavior privately through a [GitHub security advisory](https://github.com/developingchet/mythos-router/security/advisories/new). Do not post conduct reports in public issues. The maintainer reviews reports and decides on a response; this is a single-maintainer project with no separate moderation team.
 
 Maintainers have the right to remove, edit, or reject any contributions that do not align with this Code of Conduct, and may temporarily or permanently ban contributors for behavior they deem inappropriate.
 
