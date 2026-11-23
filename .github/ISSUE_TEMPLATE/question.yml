@@ -1,0 +1,91 @@
+name: Question / Support
+description: Ask a usage, setup or compatibility question
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check [Before you install](https://github.com/developingchet/mythos-router/blob/main/README.md#before-you-install),
+        [Using it](https://github.com/developingchet/mythos-router/blob/main/README.md#using-it),
+        [Options](https://github.com/developingchet/mythos-router/blob/main/README.md#options)
+        and [Known limits](https://github.com/developingchet/mythos-router/blob/main/README.md#known-limits)
+        before opening a question.
+
+        Do not report security vulnerabilities here. Use
+        [private vulnerability reporting](https://github.com/developingchet/mythos-router/security/advisories/new).
+        Transcripts and logs can quote your code and conversation: remove anything
+        private before pasting them.
+
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - Installation and first run
+        - Mythos access and entitlement
+        - Routing modes and session state
+        - Effort levels
+        - Model IDs and autoUpgrade
+        - Subagent model identity
+        - Compatibility with Claude Code releases
+        - Upgrading, rolling back or removing
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version
+      description: The version `claude plugin list` shows, or the commit
+    validations:
+      required: true
+
+  - type: input
+    id: claude-code
+    attributes:
+      label: Claude Code version and OS
+      description: Output of `claude --version`, and your operating system
+      placeholder: 2.1.327, Windows 11
+    validations:
+      required: true
+
+  - type: textarea
+    id: options
+    attributes:
+      label: Options
+      description: Output of `/mythos-subagents status`, including `routing`, `model`, `effort` and `autoUpgrade`
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: What are you trying to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried, and what happened?
+      description: Include the model `/tasks` showed for the subagent, if one started
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized transcript lines and debug log
+      description: Remove code, conversation text and other private content before pasting
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: sanitized
+    attributes:
+      label: Before submitting
+      options:
+        - label: I removed code, conversation text and other private content from anything I pasted
+          required: true

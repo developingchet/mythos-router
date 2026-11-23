@@ -1,7 +1,8 @@
 # Contributing
 
 Issues and pull requests are welcome. For security problems, follow [SECURITY.md](SECURITY.md) instead of
-opening an issue.
+opening an issue. Coding agents should also read [AGENTS.md](AGENTS.md) for the layout, commands and rules the
+engine enforces. Usage questions belong in [SUPPORT.md](SUPPORT.md).
 
 ## Making a change
 
@@ -27,7 +28,7 @@ opening an issue.
    `pip install --require-hashes -r .github/ci/requirements.txt`, then run
    `agentskills validate skills/<name>`. To change the validator's version, edit
    `.github/ci/requirements.in` and regenerate `requirements.txt` from that folder with
-   `pip-compile --generate-hashes --output-file=requirements.txt requirements.in`.
+   `pip-compile --generate-hashes --no-index --no-strip-extras --output-file=requirements.txt requirements.in`.
 
 ## Commit messages
 

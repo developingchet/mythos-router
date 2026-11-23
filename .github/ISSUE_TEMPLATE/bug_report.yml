@@ -5,7 +5,12 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for the report. For security problems, use the Security tab instead (see SECURITY.md).
+        Thanks for the report. For a usage question, see
+        [SUPPORT.md](https://github.com/developingchet/mythos-router/blob/main/SUPPORT.md).
+
+        Do not report security vulnerabilities here. Use
+        [private vulnerability reporting](https://github.com/developingchet/mythos-router/security/advisories/new).
+
         Transcripts and logs can quote your code and conversation: remove anything private before pasting.
   - type: input
     id: version
@@ -33,7 +38,7 @@ body:
     id: options
     attributes:
       label: Options
-      description: Output of `/mythos-subagents status`, and the `routing`, `model` and `autoUpgrade` values.
+      description: Output of `/mythos-subagents status`, and the `routing`, `model`, `effort` and `autoUpgrade` values.
     validations:
       required: true
   - type: dropdown
@@ -62,3 +67,11 @@ body:
       label: Transcript lines and debug log
       description: Any `mythos-router` toasts or transcript lines, and its lines from a `--debug` session's log.
       render: text
+
+  - type: checkboxes
+    id: sanitized
+    attributes:
+      label: Before submitting
+      options:
+        - label: I removed code, conversation text and other private content from anything I pasted
+          required: true

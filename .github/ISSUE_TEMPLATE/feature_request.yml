@@ -2,6 +2,14 @@ name: Feature request
 description: Suggest a change to how subagents are routed
 labels: [enhancement]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include exploit details or a security vulnerability in a feature
+        request. Use
+        [private vulnerability reporting](https://github.com/developingchet/mythos-router/security/advisories/new)
+        for those reports.
+
   - type: textarea
     id: problem
     attributes:
@@ -18,3 +26,11 @@ body:
     id: alternatives
     attributes:
       label: Alternatives considered
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks and trade-offs
+      description: Effects on routing, effort, the model boundary, session cost or compatibility
+    validations:
+      required: false
